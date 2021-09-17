@@ -13,6 +13,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {}
 
+
+  //Função search que realiza uma query através dos resultados que serçao exibidos no componente search-results
   search(query: string) {
     this.searchResults.search(query);
   }

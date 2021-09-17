@@ -16,6 +16,7 @@ export class ToolbarComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  //Função que realiza a pesquisa através da api, disparada pelo botão no componente html
   startSearch() {
     this.query = this.searchForm.value;
     this.search.emit(this.query);

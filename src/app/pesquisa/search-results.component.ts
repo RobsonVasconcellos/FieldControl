@@ -18,23 +18,20 @@ export class SearchResultsComponent implements AfterViewInit {
 
   results: Repository[];
 
-  displayedColumns: string[] = [
-    'nome',
-    'usuario',
-    'linguagem',
-    'forks',
-    'estrelas',
-    'alteracao'
-  ];
+  //Faz referência a qual conteúdo será exbido em cada linha e coluna da tabela
+  displayedColumns: string[] = ['nome', 'usuario', 'linguagem', 'forks','estrelas','alteracao'];
+
   dataSource : any;
   resultsLength = 0;
+
   isLoadingResults = true;
-  isRateLimitReached = false;
+
   private _searchEmitter: EventEmitter<string> = new EventEmitter();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  //constructor que atribui o resultado todos os dados ao método dataSource
   constructor(private githubService: GithubService) {
     this.dataSource = new MatTableDataSource(this.results)
   }
@@ -42,6 +39,7 @@ export class SearchResultsComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
+    //Utilização dos métodos map e pipe para percorrer a api e trazer o resultado para o componente
     merge(this.sort.sortChange, this.paginator.page, this._searchEmitter)
       .pipe(
         startWith({}),
@@ -56,14 +54,12 @@ export class SearchResultsComponent implements AfterViewInit {
         }),
         map(data => {
           this.isLoadingResults = false;
-          this.isRateLimitReached = false;
           this.resultsLength = data.total_count;
 
           return data.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;
-          this.isRateLimitReached = true;
           return observableOf([]);
         })
       )
