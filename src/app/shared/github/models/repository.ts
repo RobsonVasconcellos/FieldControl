@@ -77,4 +77,6 @@ export class Repository {
   organization: any;
   network_count: number;
   subscribers_count: number;
+  updated_at: string;
+
 }

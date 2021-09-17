@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  AfterViewInit,
-  Input,
-  EventEmitter
-} from '@angular/core';
+import {Component, OnInit, ViewChild, AfterViewInit, Input, EventEmitter} from '@angular/core';
 import { GithubService } from '../shared/github/github.service';
 import { Repository } from '../shared/github/models/repository';
 import { Page } from '../shared/github/models/page';
@@ -23,16 +16,17 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 export class SearchResultsComponent implements AfterViewInit {
   query: string = 'angular';
 
-  results: Array<Repository>;
+  results: Repository[];
+
   displayedColumns: string[] = [
-    'name',
-    'owner',
-    'language',
+    'nome',
+    'usuario',
+    'linguagem',
     'forks',
-    'stars',
-    'updated_at'
+    'estrelas',
+    'alteracao'
   ];
-  dataSource = new MatTableDataSource(this.results);
+  dataSource : any;
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
@@ -41,7 +35,9 @@ export class SearchResultsComponent implements AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private githubService: GithubService) {}
+  constructor(private githubService: GithubService) {
+    this.dataSource = new MatTableDataSource(this.results)
+  }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -71,13 +67,17 @@ export class SearchResultsComponent implements AfterViewInit {
           return observableOf([]);
         })
       )
-      .subscribe((data: Array<Repository>) => {
-        this.dataSource.data = data;
+      .subscribe((data: Repository[]) => {
+        this.dataSource = new MatTableDataSource(data);
       });
   }
 
   search(query: string) {
     this.query = query;
     this._searchEmitter.emit(query);
+  }
+
+  formatedDate(date: string) {
+    return new Date(date).toLocaleString();
   }
 }
