@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SearchResultsComponent } from '../search-results/search-results.component';
+import { SearchResultsComponent } from '../pesquisa/search-results.component';
 
 @Component({
   selector: 'app-home',
